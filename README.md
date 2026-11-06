@@ -1,488 +1,273 @@
-# Automated LLM Evaluation \& AI Safety Guardrail Suite
+# Automated LLM Evaluation & AI Safety Guardrail Suite
 
+An automated testing and evaluation framework for a Retrieval-Augmented Generation (RAG) application. It combines Google Gemini-powered answer generation, ChromaDB-based document retrieval, DeepEval evaluation metrics, and Python-based safety guardrails to assess LLM response quality and detect common security risks.
 
+## Key Features
 
-An automated testing and evaluation framework for a Retrieval-Augmented Generation (RAG) application. It combines Gemini-powered answer generation, ChromaDB-based document retrieval, DeepEval metrics, and Python safety guardrails to evaluate LLM response quality and detect common security risks.
-
-
-
-## Features
-
-
-
-- **RAG Pipeline:** Retrieves relevant knowledge-base chunks using ChromaDB and generates context-grounded answers with Gemini.
-
-- \*\*LLM Evaluation:\*\* Uses DeepEval to evaluate Faithfulness, Answer Relevancy, and Hallucination.
-
-- \*\*Prompt Injection Detection:\*\* Uses regex-based input validation to detect known prompt-injection patterns.
-
-- \*\*PII Protection:\*\* Detects and redacts email addresses, phone numbers, Aadhaar-like numbers, and Google API key patterns in generated responses.
-
-- \*\*Automated Testing:\*\* Uses Pytest to run functional, safety, and evaluation tests.
-
-- \*\*Golden Dataset Benchmarking:\*\* Measures response latency and expected-keyword coverage.
-
-- \*\*Run Comparison:\*\* Compares benchmark reports to identify latency changes and response variations.
-
-- \*\*JSON Reports:\*\* Stores benchmark results for later analysis.
-
-
+- **RAG Pipeline:** Retrieves relevant knowledge-base chunks using ChromaDB and generates context-grounded answers using Gemini.
+- **LLM Evaluation:** Uses DeepEval to evaluate Faithfulness, Answer Relevancy, and Hallucination.
+- **Prompt Injection Detection:** Uses regex-based input validation to identify known prompt-injection patterns.
+- **PII Protection:** Detects and redacts email addresses, phone numbers, Aadhaar-like numbers, and Google API key patterns in generated responses.
+- **Automated Testing:** Uses Pytest for functional, safety, and LLM evaluation tests.
+- **Golden Dataset Benchmarking:** Measures response latency and expected-keyword coverage.
+- **Run Comparison:** Compares benchmark runs to identify latency changes, keyword-score differences, and response variations.
+- **JSON Reports:** Generates timestamped benchmark reports for later analysis.
 
 ## Technology Stack
 
-
-
 | Category | Technologies |
-
 |---|---|
-
-| Language | Python 3.11 |
-
-| API | FastAPI |
-
-| LLM | Google Gemini |
-
+| Programming Language | Python 3.11 |
+| Backend API | FastAPI |
+| LLM Provider | Google Gemini |
 | Vector Database | ChromaDB |
-
 | Embeddings | Sentence Transformers |
-
-| Evaluation | DeepEval |
-
-| Testing | Pytest |
-
-| Data Format | JSON |
-
-
+| LLM Evaluation | DeepEval |
+| Testing Framework | Pytest |
+| Data Storage | JSON |
 
 ## Project Architecture
 
-
-
 ```text
-
 llm-evaluation-suite/
-
 │
-
 ├── app/
-
+│   ├── __init__.py
 │   ├── config.py
-
 │   ├── main.py
-
 │   ├── chatbot.py
-
-│   ├── rag\_pipeline.py
-
+│   ├── rag_pipeline.py
 │   ├── retriever.py
-
 │   └── guardrails.py
-
 │
-
 ├── evaluation/
-
+│   ├── __init__.py
 │   ├── metrics.py
-
-│   └── evaluator.py
-
+│   ├── evaluator.py
+│   └── safety_evaluator.py
 │
-
 ├── tests/
-
-│   ├── test\_faithfulness.py
-
-│   ├── test\_relevancy.py
-
-│   ├── test\_hallucination.py
-
-│   ├── test\_prompt\_injection.py
-
-│   └── test\_pii\_leakage.py
-
+│   ├── __init__.py
+│   ├── test_faithfulness.py
+│   ├── test_relevancy.py
+│   ├── test_hallucination.py
+│   ├── test_prompt_injection.py
+│   └── test_pii_leakage.py
 │
-
 ├── datasets/
-
-│   ├── golden\_dataset.json
-
-│   ├── adversarial\_prompts.json
-
-│   └── knowledge\_base.txt
-
+│   ├── golden_dataset.json
+│   ├── adversarial_prompts.json
+│   └── knowledge_base.txt
 │
-
-├── scripts/
-
-│   ├── ingest\_documents.py
-
-│   ├── run\_benchmark.py
-
-│   └── compare\_runs.py
-
-│
-
 ├── reports/
-
+│
+├── scripts/
+│   ├── ingest_documents.py
+│   ├── run_benchmark.py
+│   └── compare_runs.py
+│
 ├── requirements.txt
-
 ├── pytest.ini
-
 ├── .env.example
-
 ├── .gitignore
-
 └── README.md
-
 ```
 
+## System Workflow
 
+1. **Document Ingestion:** Reads knowledge-base documents and divides them into smaller, overlapping text chunks.
+2. **Embedding Generation:** Sentence Transformers converts the chunks into numerical embeddings.
+3. **Vector Storage:** ChromaDB stores the embeddings and retrieves relevant chunks using similarity search.
+4. **Context Construction:** The RAG pipeline combines retrieved information with the user's question.
+5. **Answer Generation:** Gemini generates an answer using the retrieved context.
+6. **Output Safety:** Guardrails scan generated responses and redact supported PII patterns.
+7. **LLM Evaluation:** DeepEval evaluates answer quality using predefined evaluation metrics.
+8. **Automated Testing:** Pytest executes functional, prompt-injection, PII, and LLM evaluation tests.
+9. **Benchmark Analysis:** Benchmark scripts record latency, keyword coverage, and response variations across multiple runs.
 
-## How It Works
+## LLM Evaluation Metrics
 
+The project integrates three DeepEval metrics:
 
+| Metric | Purpose |
+|---|---|
+| Faithfulness | Checks whether the generated answer is supported by the retrieved context. |
+| Answer Relevancy | Measures how relevant the generated answer is to the original question. |
+| Hallucination | Evaluates whether the answer contains information unsupported by the provided context. |
 
-1\. Documents are split into smaller overlapping chunks.
+**Evaluation Threshold:** Each metric is configured with a threshold of `0.7`.
 
-2\. Sentence Transformers converts the chunks into embeddings.
+## AI Safety Testing
 
-3\. ChromaDB stores the embeddings and retrieves relevant chunks for a user query.
-
-4\. The RAG pipeline combines retrieved context with the user's question.
-
-5\. Gemini generates an answer using the supplied context.
-
-6\. Output guardrails scan the generated response and redact supported PII patterns.
-
-7\. DeepEval evaluates answer quality using predefined metrics.
-
-8\. Pytest runs automated functional and safety tests.
-
-9\. The benchmark scripts measure latency, keyword coverage, and response variation across runs.
-
-
-
-## Evaluation Metrics
-
-
-
-The project uses three DeepEval metrics:
-
-
-
-- \*\*Faithfulness:\*\* Checks whether the generated answer is supported by the retrieved context.
-
-- \*\*Answer Relevancy:\*\* Measures how relevant the answer is to the user's question.
-
-- \*\*Hallucination:\*\* Evaluates whether the answer contains information unsupported by the provided context.
-
-
-
-Each metric uses a configured threshold of 0.7.
-
-
-
-## Safety Testing
-
-
-
-The safety test suite currently includes:
-
-
+The safety testing suite currently covers:
 
 - 25 adversarial prompt-injection test cases.
-
 - Empty-input validation.
-
 - Oversized-input validation.
+- Email address detection and redaction.
+- Phone number detection and redaction.
+- Aadhaar-like number detection and redaction.
+- Google API key pattern detection and redaction.
+- Safe-output preservation tests.
 
-- PII redaction tests for email, phone, Aadhaar-like numbers, and API-key patterns.
+**Security Note:** The current guardrails use regular expressions to detect predefined patterns. They provide baseline protection but are not a comprehensive defense against all prompt-injection, adversarial, or data-leakage attacks.
 
+## Golden Dataset Benchmarking
 
+The project uses a golden dataset containing three predefined questions.
 
-The current guardrails use regular expressions and provide baseline protection against known patterns. They are not a comprehensive defense against all prompt-injection or data-leakage attacks.
+For each question, the benchmark records:
 
+- Generated answer.
+- Retrieved source information.
+- Response latency in seconds.
+- Expected-keyword coverage score.
+- Matched expected keywords.
 
+Each benchmark execution generates a timestamped JSON report inside the `reports/` directory.
 
-## Benchmarking
+### Benchmark Comparison
 
+The comparison script analyzes the latest two benchmark reports and checks:
 
+- Response latency changes.
+- Expected-keyword coverage differences.
+- Whether the generated answer text changed between runs.
 
-A golden dataset contains three questions used to benchmark the RAG application.
+**Important:** A changed answer does not necessarily indicate factual drift. Similarly, keyword coverage is a simple text-overlap measure and is not a substitute for semantic or factual evaluation.
 
+## Installation and Setup
 
-
-The benchmark records:
-
-
-
-\- Response latency in seconds.
-
-\- Expected-keyword coverage score.
-
-\- Retrieved source information.
-
-\- Generated answers.
-
-
-
-Each run generates a timestamped JSON report inside the `reports/` directory.
-
-
-
-The comparison script checks latency changes, keyword scores, and whether generated answers changed between two runs.
-
-
-
-\*\*Note:\*\* Keyword coverage is a simple text-overlap measure, not a substitute for semantic or factual evaluation.
-
-
-
-\## Installation and Setup
-
-
-
-\### 1. Clone the repository
-
-
+### 1. Clone the repository
 
 ```bash
-
-git clone <YOUR\_GITHUB\_REPOSITORY\_URL>
-
-cd llm-evaluation-suite
-
+git clone https://github.com/AstosM/LLM-Evaluation-Suite.git
+cd LLM-Evaluation-Suite
 ```
 
-
-
-\### 2. Create a virtual environment
-
-
+### 2. Create a virtual environment
 
 ```bash
-
 python -m venv venv
-
 ```
 
-
-
-Activate it on Windows PowerShell:
-
-
+Activate it using Windows PowerShell:
 
 ```powershell
-
-.\\venv\\Scripts\\Activate.ps1
-
+.\venv\Scripts\Activate.ps1
 ```
 
-
-
-\### 3. Install dependencies
-
-
+### 3. Install dependencies
 
 ```bash
-
 pip install -r requirements.txt
-
 ```
 
+### 4. Configure environment variables
 
+Create a `.env` file in the project root using `.env.example` as a template.
 
-\### 4. Configure environment variables
-
-
-
-Create a `.env` file in the project root and add:
-
-
+Add your own Gemini API key:
 
 ```env
-
-GOOGLE\_API\_KEY=your\_gemini\_api\_key
-
-GEMINI\_MODEL\_NAME=your\_supported\_gemini\_model
-
-USE\_GEMINI\_MODEL=1
-
+GOOGLE_API_KEY=your_gemini_api_key
+GEMINI_MODEL_NAME=gemini-3.5-flash-lite
+USE_GEMINI_MODEL=1
 ```
 
+Never commit your `.env` file or expose your API key publicly.
 
-
-Never commit your `.env` file or expose your API key.
-
-
-
-\### 5. Ingest the knowledge base
-
-
+### 5. Ingest the knowledge base
 
 ```bash
-
-python scripts/ingest\_documents.py
-
+python scripts/ingest_documents.py
 ```
 
+This processes the knowledge-base document and stores its embeddings in ChromaDB.
 
-
-\### 6. Start the API
-
-
+### 6. Start the FastAPI application
 
 ```bash
-
 uvicorn app.main:app --reload
-
 ```
-
-
 
 Open the interactive API documentation:
 
-
-
-```text
-
 http://127.0.0.1:8000/docs
 
-```
+Use the `/chat` endpoint to submit questions to the RAG application.
 
+## Running Tests
 
-
-Use the `/chat` endpoint to submit questions.
-
-
-
-\## Running Tests
-
-
-
-Run the safety tests:
-
-
+### Run safety tests
 
 ```bash
-
-python -m pytest tests/test\_prompt\_injection.py tests/test\_pii\_leakage.py -q
-
+python -m pytest tests/test_prompt_injection.py tests/test_pii_leakage.py -q --tb=short
 ```
 
-
-
-Run individual LLM evaluation tests:
-
-
+### Run individual DeepEval tests
 
 ```bash
+python -m pytest tests/test_faithfulness.py -q --tb=short
 
-python -m pytest tests/test\_faithfulness.py -q
+python -m pytest tests/test_relevancy.py -q --tb=short
 
-python -m pytest tests/test\_relevancy.py -q
-
-python -m pytest tests/test\_hallucination.py -q
-
+python -m pytest tests/test_hallucination.py -q --tb=short
 ```
 
+**Note:** DeepEval tests make external model calls and may take longer or fail temporarily due to provider availability or API limits.
 
+## Running Benchmarks
 
-DeepEval tests make external model calls and may take longer or fail temporarily if the provider is unavailable.
-
-
-
-\## Running Benchmarks
-
-
-
-Run the benchmark:
-
-
+Execute the benchmark:
 
 ```bash
-
-python scripts/run\_benchmark.py
-
+python scripts/run_benchmark.py
 ```
 
+Run it again to generate another benchmark report.
 
-
-Run it again to generate another report, then compare the latest two reports:
-
-
+Compare the latest two reports:
 
 ```bash
-
-python scripts/compare\_runs.py
-
+python scripts/compare_runs.py
 ```
 
+The comparison output helps analyze changes in response latency, keyword coverage, and generated answer text.
 
+## Verified Development Results
 
-\## Current Test Results
+The following results were obtained during project development:
 
-
-
-Verified during development:
-
-
-
-| Test Area | Result |
-
+| Test Area | Verified Result |
 |---|---:|
-
 | Adversarial prompt-injection cases | 25 passed |
-
 | Additional input-validation tests | 3 passed |
-
 | PII redaction tests | 5 passed |
-
-| Combined safety tests | 33 passed |
-
+| Combined safety test suite | 33 passed |
 | DeepEval Faithfulness | Passed individually |
-
 | DeepEval Answer Relevancy | Passed individually |
-
 | DeepEval Hallucination | Passed individually |
-
 | Golden dataset benchmark | 3 successful cases in each of 2 runs |
 
+These are development-time results, not guarantees of production-level security or model reliability.
 
+## Limitations and Future Improvements
 
-These are development test results, not a guarantee of production-level security or model reliability.
+- Expand the golden dataset with more diverse questions.
+- Introduce semantic evaluation alongside keyword coverage.
+- Improve prompt-injection detection beyond regex-based patterns.
+- Expand automated safety evaluation with more adversarial scenarios.
+- Track evaluation metrics across larger benchmark runs.
+- Add CI workflows to execute tests automatically after code changes.
+- Improve reporting with visual summaries and performance trends.
 
+## Author
 
-
-\## Limitations and Future Improvements
-
-
-
-\- Expand the golden dataset with more diverse questions.
-
-\- Add semantic evaluation to complement keyword coverage.
-
-\- Improve prompt-injection detection beyond regex patterns.
-
-\- Add automated evaluation of safety behavior and response consistency.
-
-\- Track evaluation metrics across larger benchmark runs.
-
-\- Add CI workflows to run tests automatically on code changes.
-
-\- Improve reporting with visual summaries and trend analysis.
-
-
-
-\## Author
-
-
-
-\*\*Ashutosh Maurya\*\*
-
-
+**Ashutosh Maurya**
 
 B.Tech – Information Technology
 
+GitHub: [AstosM](https://github.com/AstosM)
 
-
+**Repository:** [LLM Evaluation & AI Safety Guardrail Suite](https://github.com/AstosM/LLM-Evaluation-Suite)
