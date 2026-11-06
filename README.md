@@ -1,4 +1,4 @@
-\# Automated LLM Evaluation \& AI Safety Guardrail Suite
+# Automated LLM Evaluation \& AI Safety Guardrail Suite
 
 
 
@@ -6,29 +6,29 @@ An automated testing and evaluation framework for a Retrieval-Augmented Generati
 
 
 
-\## Features
+## Features
 
 
 
-\- \*\*RAG Pipeline:\*\* Retrieves relevant knowledge-base chunks using ChromaDB and generates context-grounded answers with Gemini.
+- \*\*RAG Pipeline:\*\* Retrieves relevant knowledge-base chunks using ChromaDB and generates context-grounded answers with Gemini.
 
-\- \*\*LLM Evaluation:\*\* Uses DeepEval to evaluate Faithfulness, Answer Relevancy, and Hallucination.
+- \*\*LLM Evaluation:\*\* Uses DeepEval to evaluate Faithfulness, Answer Relevancy, and Hallucination.
 
-\- \*\*Prompt Injection Detection:\*\* Uses regex-based input validation to detect known prompt-injection patterns.
+- \*\*Prompt Injection Detection:\*\* Uses regex-based input validation to detect known prompt-injection patterns.
 
-\- \*\*PII Protection:\*\* Detects and redacts email addresses, phone numbers, Aadhaar-like numbers, and Google API key patterns in generated responses.
+- \*\*PII Protection:\*\* Detects and redacts email addresses, phone numbers, Aadhaar-like numbers, and Google API key patterns in generated responses.
 
-\- \*\*Automated Testing:\*\* Uses Pytest to run functional, safety, and evaluation tests.
+- \*\*Automated Testing:\*\* Uses Pytest to run functional, safety, and evaluation tests.
 
-\- \*\*Golden Dataset Benchmarking:\*\* Measures response latency and expected-keyword coverage.
+- \*\*Golden Dataset Benchmarking:\*\* Measures response latency and expected-keyword coverage.
 
-\- \*\*Run Comparison:\*\* Compares benchmark reports to identify latency changes and response variations.
+- \*\*Run Comparison:\*\* Compares benchmark reports to identify latency changes and response variations.
 
-\- \*\*JSON Reports:\*\* Stores benchmark results for later analysis.
+- \*\*JSON Reports:\*\* Stores benchmark results for later analysis.
 
 
 
-\## Technology Stack
+## Technology Stack
 
 
 
@@ -54,7 +54,7 @@ An automated testing and evaluation framework for a Retrieval-Augmented Generati
 
 
 
-\## Project Architecture
+## Project Architecture
 
 
 
@@ -138,7 +138,7 @@ llm-evaluation-suite/
 
 
 
-\## How It Works
+## How It Works
 
 
 
@@ -162,7 +162,7 @@ llm-evaluation-suite/
 
 
 
-\## Evaluation Metrics
+## Evaluation Metrics
 
 
 
@@ -170,11 +170,11 @@ The project uses three DeepEval metrics:
 
 
 
-\- \*\*Faithfulness:\*\* Checks whether the generated answer is supported by the retrieved context.
+- \*\*Faithfulness:\*\* Checks whether the generated answer is supported by the retrieved context.
 
-\- \*\*Answer Relevancy:\*\* Measures how relevant the answer is to the user's question.
+- \*\*Answer Relevancy:\*\* Measures how relevant the answer is to the user's question.
 
-\- \*\*Hallucination:\*\* Evaluates whether the answer contains information unsupported by the provided context.
+- \*\*Hallucination:\*\* Evaluates whether the answer contains information unsupported by the provided context.
 
 
 
@@ -182,7 +182,7 @@ Each metric uses a configured threshold of 0.7.
 
 
 
-\## Safety Testing
+## Safety Testing
 
 
 
@@ -190,13 +190,13 @@ The safety test suite currently includes:
 
 
 
-\- 25 adversarial prompt-injection test cases.
+- 25 adversarial prompt-injection test cases.
 
-\- Empty-input validation.
+- Empty-input validation.
 
-\- Oversized-input validation.
+- Oversized-input validation.
 
-\- PII redaction tests for email, phone, Aadhaar-like numbers, and API-key patterns.
+- PII redaction tests for email, phone, Aadhaar-like numbers, and API-key patterns.
 
 
 
@@ -204,7 +204,7 @@ The current guardrails use regular expressions and provide baseline protection a
 
 
 
-\## Benchmarking
+## Benchmarking
 
 
 
