@@ -1,0 +1,17 @@
+[
+  {
+    "id": "G001",
+    "question": "What does faithfulness measure in LLM evaluation?",
+    "expected_keywords": ["supported", "context", "answer"]
+  },
+  {
+    "id": "G002",
+    "question": "What is Retrieval-Augmented Generation?",
+    "expected_keywords": ["retrieval", "generation", "documents"]
+  },
+  {
+    "id": "G003",
+    "question": "What is ChromaDB used for?",
+    "expected_keywords": ["vector", "database", "embeddings"]
+  }
+]
