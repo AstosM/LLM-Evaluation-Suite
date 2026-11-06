@@ -10,7 +10,7 @@ An automated testing and evaluation framework for a Retrieval-Augmented Generati
 
 
 
-- \*\*RAG Pipeline:\*\* Retrieves relevant knowledge-base chunks using ChromaDB and generates context-grounded answers with Gemini.
+- **RAG Pipeline:** Retrieves relevant knowledge-base chunks using ChromaDB and generates context-grounded answers with Gemini.
 
 - \*\*LLM Evaluation:\*\* Uses DeepEval to evaluate Faithfulness, Answer Relevancy, and Hallucination.
 
